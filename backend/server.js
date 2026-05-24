@@ -6,7 +6,7 @@
  * - 프론트엔드에서 요청하는 API를 처리할 준비를 합니다.
  * - 현재 단계에서는 서버 실행 확인용 API만 제공합니다.
  */
-
+const studentRoutes = require("./routes/studentRoutes");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -26,6 +26,7 @@ const PORT = 5000;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use("/api/students", studentRoutes);
 
 /**
  * 서버 상태 확인 API
