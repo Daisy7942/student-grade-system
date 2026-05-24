@@ -8,6 +8,7 @@
  */
 const studentRoutes = require("./routes/studentRoutes");
 const subjectRoutes = require("./routes/subjectRoutes");
+const scoreRoutes = require("./routes/scoreRoutes");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -29,6 +30,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/students", studentRoutes);
 app.use("/api/subjects", subjectRoutes);
+app.use("/api/scores", scoreRoutes);
 
 /**
  * 서버 상태 확인 API
