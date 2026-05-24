@@ -7,6 +7,7 @@
  * - 현재 단계에서는 서버 실행 확인용 API만 제공합니다.
  */
 const studentRoutes = require("./routes/studentRoutes");
+const subjectRoutes = require("./routes/subjectRoutes");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
@@ -27,6 +28,7 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use("/api/students", studentRoutes);
+app.use("/api/subjects", subjectRoutes);
 
 /**
  * 서버 상태 확인 API
