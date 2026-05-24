@@ -1,0 +1,19 @@
+# Node.js dependency folder
+node_modules/
+backend/node_modules/
+
+# Environment variable files
+.env
+backend/.env
+frontend/.env
+
+# Log files
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VS Code settings
+.vscode/
