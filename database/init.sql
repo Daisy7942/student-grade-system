@@ -1,16 +1,16 @@
 -- 학생 정보 및 성적 관리 시스템 DB 초기화 스크립트
--- Docker Compose로 MySQL 컨테이너가 처음 실행될 때 자동으로 실행됩니다.
+-- MySQL 컨테이너가 처음 실행될 때 자동으로 실행됩니다.
 
--- 사용할 데이터베이스를 선택합니다.
 USE student_grade_db;
 
--- 기존 테이블이 있을 경우 삭제합니다.
--- scores 테이블은 students 테이블을 참조하므로 먼저 삭제해야 합니다.
+-- 기존 테이블 삭제
+-- 참조 관계가 있는 자식 테이블부터 삭제합니다.
 DROP TABLE IF EXISTS scores;
+DROP TABLE IF EXISTS department_subjects;
+DROP TABLE IF EXISTS subjects;
 DROP TABLE IF EXISTS students;
 
 -- 학생 기본 정보 테이블
--- 학생의 학번, 이름, 학과 정보를 저장합니다.
 CREATE TABLE students (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_no VARCHAR(20) NOT NULL UNIQUE,
@@ -19,16 +19,37 @@ CREATE TABLE students (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 과목 정보 테이블
+-- 시스템에서 사용할 과목 목록을 관리합니다.
+CREATE TABLE subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    subject_name VARCHAR(100) NOT NULL UNIQUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 학과별 기본 과목 테이블
+-- 학과마다 기본으로 사용하는 과목을 관리합니다.
+CREATE TABLE department_subjects (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    department VARCHAR(100) NOT NULL,
+    subject_id INT NOT NULL,
+
+    CONSTRAINT fk_department_subject
+        FOREIGN KEY (subject_id)
+        REFERENCES subjects(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT uq_department_subject
+        UNIQUE (department, subject_id)
+);
+
 -- 성적 정보 테이블
--- 학생별 국어, 영어, 수학 점수와 평균, 등급을 저장합니다.
+-- 학생별, 과목별 점수를 저장합니다.
 CREATE TABLE scores (
     id INT AUTO_INCREMENT PRIMARY KEY,
     student_id INT NOT NULL,
-    korean INT NOT NULL,
-    english INT NOT NULL,
-    math INT NOT NULL,
-    average DECIMAL(5,2) NOT NULL,
-    grade VARCHAR(2) NOT NULL,
+    subject_id INT NOT NULL,
+    score INT NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
@@ -37,7 +58,37 @@ CREATE TABLE scores (
         REFERENCES students(id)
         ON DELETE CASCADE,
 
-    CONSTRAINT chk_korean_score CHECK (korean BETWEEN 0 AND 100),
-    CONSTRAINT chk_english_score CHECK (english BETWEEN 0 AND 100),
-    CONSTRAINT chk_math_score CHECK (math BETWEEN 0 AND 100)
+    CONSTRAINT fk_scores_subject
+        FOREIGN KEY (subject_id)
+        REFERENCES subjects(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT chk_score_range
+        CHECK (score BETWEEN 0 AND 100),
+
+    CONSTRAINT uq_student_subject
+        UNIQUE (student_id, subject_id)
 );
+
+-- 기본 과목 데이터
+INSERT INTO subjects (subject_name) VALUES
+('HTML'),
+('JavaScript'),
+('Node.js'),
+('Database'),
+('Java'),
+('회계원리'),
+('마케팅기초');
+
+-- 학과별 기본 과목 데이터
+INSERT INTO department_subjects (department, subject_id)
+SELECT '컴퓨터공학과', id FROM subjects
+WHERE subject_name IN ('HTML', 'JavaScript', 'Node.js', 'Database');
+
+INSERT INTO department_subjects (department, subject_id)
+SELECT '소프트웨어학과', id FROM subjects
+WHERE subject_name IN ('Java', 'Database', 'HTML');
+
+INSERT INTO department_subjects (department, subject_id)
+SELECT '경영학과', id FROM subjects
+WHERE subject_name IN ('회계원리', '마케팅기초');
