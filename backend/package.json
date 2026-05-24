@@ -1,0 +1,15 @@
+{
+  "name": "student-grade-backend",
+  "version": "1.0.0",
+  "description": "학생 정보 및 성적 관리 시스템 백엔드 서버",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.18.3",
+    "mysql2": "^3.9.1"
+  }
+}
