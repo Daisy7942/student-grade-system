@@ -1,0 +1,758 @@
+:root {
+    --navy: #123f8c;
+    --navy-dark: #0b2f6b;
+    --text: #0f172a;
+    --muted: #64748b;
+    --line: #d5dfec;
+    --soft-line: #e2e8f0;
+    --bg: #f3f6fb;
+    --blue-soft: #eff6ff;
+    --blue-line: #bcd2ff;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Pretendard", "Noto Sans KR", "Malgun Gothic", Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* 헤더 */
+.app-header {
+    padding: 26px 48px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    color: #fff;
+    background: linear-gradient(135deg, #0b1f3a, #102f5c);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.22);
+}
+
+.app-logo {
+    width: 64px;
+    height: 64px;
+    padding: 8px;
+    object-fit: contain;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.app-title {
+    flex: 1;
+}
+
+.app-header h1 {
+    margin: 0;
+    font-size: 30px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.app-header p {
+    margin: 8px 0 0;
+    font-size: 15px;
+    color: #dbeafe;
+}
+
+.student-count-card {
+    min-width: 210px;
+    margin-left: auto;
+    padding: 14px 18px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(8px);
+}
+
+.student-count-icon {
+    width: 46px;
+    height: 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 16px;
+    background: rgba(96, 165, 250, 0.28);
+    font-size: 24px;
+}
+
+.student-count-card span {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #bfdbfe;
+}
+
+.student-count-card strong {
+    display: flex;
+    align-items: baseline;
+    gap: 3px;
+    font-size: 17px;
+    font-weight: 800;
+    color: #dbeafe;
+}
+
+.student-count-card strong b {
+    font-size: 30px;
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -1px;
+}
+
+/* 레이아웃 */
+.container {
+    width: 94%;
+    max-width: 1480px;
+    margin: 34px auto 60px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.student-card {
+    grid-column: 1;
+}
+
+.score-card {
+    grid-column: 2;
+}
+
+.card {
+    padding: 28px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}
+
+.card-header {
+    margin-bottom: 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 18px;
+}
+
+.card-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+    letter-spacing: -0.4px;
+}
+
+.card-header p {
+    margin: 8px 0 0;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+/* 버튼 */
+.btn {
+    height: 44px;
+    padding: 0 17px;
+    border: 1px solid #b8c4d6;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.18s;
+    white-space: nowrap;
+}
+
+.btn.primary,
+#addScoreBtn {
+    color: #fff;
+    background: var(--navy);
+    border-color: var(--navy);
+    box-shadow: 0 8px 16px rgba(18, 63, 140, 0.22);
+}
+
+.btn.primary:hover,
+#addScoreBtn:hover {
+    background: var(--navy-dark);
+    transform: translateY(-1px);
+}
+
+.btn.secondary,
+.btn.icon-btn,
+#resetScoreBtn {
+    color: #334155;
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    box-shadow: none;
+}
+
+.btn.secondary:hover,
+.btn.icon-btn:hover,
+#resetScoreBtn:hover {
+    background: #e2e8f0;
+}
+
+.score-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#resetScoreBtn {
+    width: 44px;
+    padding: 0;
+}
+
+/* 입력 / 검색 */
+.search-box {
+    margin-bottom: 22px;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr auto auto;
+    gap: 12px;
+}
+
+input,
+select {
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid #9fb0c6;
+    border-radius: 12px;
+    background: #fff;
+    color: var(--text);
+    font-size: 14px;
+    outline: none;
+}
+
+input::placeholder {
+    color: #94a3b8;
+}
+
+input:focus,
+select:focus {
+    border-color: #1d4ed8;
+    box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
+}
+
+/* 테이블 공통 */
+.table-box {
+    overflow: hidden;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+thead {
+    background: #f8fafc;
+}
+
+th,
+td {
+    text-align: center;
+    font-size: 14px;
+}
+
+th {
+    height: 48px;
+    font-weight: 800;
+    color: #334155;
+}
+
+td {
+    height: 58px;
+    border-top: 1px solid var(--soft-line);
+    color: #1e293b;
+}
+
+tbody tr {
+    transition: 0.15s;
+}
+
+tbody tr:hover,
+.selected-row {
+    background: var(--blue-soft);
+}
+
+.empty-message {
+    text-align: center !important;
+    padding: 35px 0 !important;
+    color: #94a3b8;
+}
+
+/* 학생 관리 표 */
+#studentTableBody tr {
+    cursor: pointer;
+}
+
+.student-card th:first-child,
+.student-card td:first-child {
+    width: 130px;
+}
+
+.student-card th:nth-child(2),
+.student-card td:nth-child(2) {
+    width: 110px;
+}
+
+.student-card th:last-child,
+.student-card td:last-child {
+    width: 135px;
+}
+
+/* 작업 버튼 */
+.row-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+}
+
+.row-btn {
+    min-width: 50px;
+    height: 30px;
+    padding: 0 8px;
+    margin: 0;
+    border: none;
+    border-radius: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 800;
+    cursor: pointer;
+    transition: 0.15s;
+}
+
+.row-btn.edit {
+    background: var(--blue-soft);
+    color: #2563eb;
+}
+
+.row-btn.delete {
+    background: #fff1f2;
+    color: #e11d48;
+}
+
+.row-btn:hover {
+    transform: translateY(-1px);
+}
+
+/* 성적 조회 - 선택 학생 */
+.score-search {
+    margin-bottom: 22px;
+    padding: 18px 22px;
+    background: linear-gradient(135deg, #f8fbff, #eef5ff);
+    border: 1px solid var(--blue-line);
+    border-radius: 17px;
+}
+
+.score-search > span {
+    display: none;
+}
+
+#selectedStudentBox {
+    width: 100%;
+    min-height: 58px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+}
+
+.selected-info {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.selected-avatar {
+    width: 46px;
+    height: 46px;
+    flex: 0 0 46px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #e2e8f0;
+    font-size: 21px;
+}
+
+.selected-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    line-height: 1.4;
+}
+
+.selected-text strong {
+    font-size: 16px;
+    font-weight: 800;
+}
+
+.selected-text span,
+.selected-text em {
+    font-size: 13px;
+    font-weight: 700;
+    color: #64748b;
+}
+
+.selected-text em {
+    font-style: normal;
+}
+
+/* 성적 조회 - 빈 화면 */
+.score-empty-state {
+    min-height: 330px;
+    padding: 42px 20px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background: #f8fafc;
+    color: var(--muted);
+    pointer-events: none;
+}
+
+.score-empty-state img {
+    width: 90px;
+    height: 90px;
+    object-fit: contain;
+    margin-bottom: 16px;
+    opacity: 0.85;
+}
+
+.score-empty-state strong {
+    margin-bottom: 8px;
+    color: #1e293b;
+    font-size: 18px;
+    font-weight: 800;
+}
+
+.score-empty-state p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* 성적표 */
+.score-card #scoreTableBox {
+    margin-top: 20px;
+}
+
+.score-card #scoreTableBox table {
+    table-layout: fixed;
+}
+
+.score-card #scoreTableBox th:first-child,
+.score-card #scoreTableBox td:first-child {
+    width: 42%;
+    text-align: left;
+    padding-left: 24px;
+    padding-right: 10px;
+}
+
+.score-card #scoreTableBox th:nth-child(2),
+.score-card #scoreTableBox td:nth-child(2) {
+    width: 18%;
+}
+
+.score-card #scoreTableBox th:nth-child(3),
+.score-card #scoreTableBox td:nth-child(3) {
+    width: 16%;
+}
+
+.score-card #scoreTableBox th:last-child,
+.score-card #scoreTableBox td:last-child {
+    width: 24%;
+    padding: 0 10px;
+}
+
+.score-card #scoreTableBox .row-btn {
+    min-width: 42px;
+    height: 28px;
+    padding: 0 8px;
+    font-size: 11px;
+}
+
+.score-card tbody tr:hover {
+    background: #f8fbff;
+}
+
+/* 성적 요약 */
+.score-summary-box {
+    margin-top: 24px;
+    min-height: 96px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 54px minmax(0, 1fr) 1px minmax(0, 1fr);
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+    background: linear-gradient(135deg, #f8fbff, #eef5ff);
+    border: 1px solid var(--blue-line);
+    border-radius: 17px;
+}
+
+.score-summary-box::before {
+    content: "🏆";
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #dbeafe;
+    font-size: 22px;
+}
+
+.score-summary-label {
+    margin-bottom: 5px;
+    font-size: 13px;
+    font-weight: 800;
+    color: #475569;
+}
+
+.score-summary-value {
+    font-size: 25px;
+    font-weight: 900;
+    color: #1d4ed8;
+    letter-spacing: -0.5px;
+}
+
+.score-summary-value span {
+    font-size: 13px;
+    font-weight: 800;
+    color: #64748b;
+}
+
+.summary-divider {
+    width: 1px;
+    height: 54px;
+    background: #cbd5e1;
+}
+
+/* 통계 */
+.statistics-summary {
+    margin-bottom: 18px;
+    padding: 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--blue-soft);
+    border: 1px solid #82b7f8;
+    border-radius: 14px;
+}
+
+.statistics-summary strong {
+    color: #1e3a8a;
+}
+
+.statistics-summary span {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1d4ed8;
+}
+
+/* 모달 */
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.45);
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    width: 430px;
+    max-width: calc(100% - 32px);
+    padding: 26px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 22px;
+    box-shadow: 0 22px 60px rgba(15, 23, 42, 0.28);
+}
+
+.modal-header,
+.modal-button-group {
+    display: flex;
+    align-items: center;
+}
+
+.modal-header {
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.modal-header h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 800;
+}
+
+.close-btn {
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #334155;
+    font-size: 22px;
+    cursor: pointer;
+}
+
+.close-btn:hover {
+    background: #e2e8f0;
+}
+
+.form-row {
+    margin-bottom: 16px;
+}
+
+.form-row label {
+    display: block;
+    margin-bottom: 7px;
+    font-weight: 800;
+    font-size: 14px;
+    color: #334155;
+}
+
+.form-row input,
+.form-row select {
+    width: 100%;
+}
+
+.subject-add-btn {
+    margin-top: 8px;
+}
+
+.modal-button-group {
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* 반응형 */
+@media (max-width: 1100px) {
+    .container {
+        grid-template-columns: 1fr;
+    }
+
+    .student-card,
+    .score-card {
+        grid-column: 1;
+    }
+
+    .search-box {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 700px) {
+    .app-header {
+        padding: 22px;
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .app-header h1 {
+        font-size: 23px;
+    }
+
+    .app-logo {
+        width: 52px;
+        height: 52px;
+    }
+
+    .student-count-card {
+        width: 100%;
+        margin-left: 0;
+    }
+
+    .container {
+        width: 92%;
+        margin-top: 24px;
+    }
+
+    .card,
+    .score-card {
+        padding: 20px;
+    }
+
+    .card-header {
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .search-box {
+        grid-template-columns: 1fr;
+    }
+
+    .score-header-actions {
+        width: 100%;
+    }
+
+    #addScoreBtn {
+        flex: 1;
+    }
+
+    .score-card #scoreTableBox th:first-child,
+    .score-card #scoreTableBox td:first-child {
+        width: 38%;
+        padding-left: 14px;
+    }
+
+    .score-card #scoreTableBox th:nth-child(2),
+    .score-card #scoreTableBox td:nth-child(2) {
+        width: 17%;
+    }
+
+    .score-card #scoreTableBox th:nth-child(3),
+    .score-card #scoreTableBox td:nth-child(3) {
+        width: 15%;
+    }
+
+    .score-card #scoreTableBox th:last-child,
+    .score-card #scoreTableBox td:last-child {
+        width: 30%;
+        padding: 0 6px;
+    }
+
+    .score-card #scoreTableBox .row-actions {
+        gap: 4px;
+    }
+
+    .score-card #scoreTableBox .row-btn {
+        min-width: 36px;
+        padding: 0 6px;
+        font-size: 10px;
+    }
+
+    .score-summary-box {
+        grid-template-columns: 48px minmax(0, 1fr) 1px minmax(0, 1fr);
+        gap: 14px;
+        padding: 18px 16px;
+    }
+
+    .score-summary-value {
+        font-size: 21px;
+    }
+}
