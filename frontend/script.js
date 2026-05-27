@@ -32,6 +32,9 @@ const el = {
     studentModal: document.getElementById("studentModal"),
     studentForm: document.getElementById("studentForm"),
     studentModalTitle: document.getElementById("studentModalTitle"),
+    studentNo: document.getElementById("studentNo"),
+    studentName: document.getElementById("studentName"),
+    studentDepartment: document.getElementById("studentDepartment"),
 
     // 성적 모달
     scoreModal: document.getElementById("scoreModal"),
@@ -287,13 +290,21 @@ function renderScoreTable(scores, summary) {
 // 학생 추가/수정 모달 열기
 function openStudentModal(mode, data = null) {
     state.studentModalMode = mode;
+    
+    // 모드에 따라 선택 학생 정보 동기화
+    if (mode === "add") {
+        state.selectedStudent = null;
+    } else {
+        state.selectedStudent = data;
+    }
 
     el.studentModalTitle.textContent = mode === "add" ? "학생 추가" : "학생 수정";
     document.getElementById("saveStudentBtn").textContent = mode === "add" ? "등록" : "수정";
 
-    el.studentForm.studentNo.value = data ? data.student_no : "";
-    el.studentForm.studentName.value = data ? data.name : "";
-    el.studentForm.studentDepartment.value = data ? data.department : "";
+    // 필드에 값 채우기
+    el.studentNo.value = data ? data.student_no : "";
+    el.studentName.value = data ? data.name : "";
+    el.studentDepartment.value = data ? data.department : "";
 
     el.studentModal.classList.add("show");
 }
@@ -348,17 +359,23 @@ el.studentForm.onsubmit = async (e) => {
     e.preventDefault();
 
     const data = {
-        student_no: el.studentForm.studentNo.value,
-        name: el.studentForm.studentName.value,
-        department: el.studentForm.studentDepartment.value
+        student_no: el.studentNo.value.trim(),
+        name: el.studentName.value.trim(),
+        department: el.studentDepartment.value
     };
 
     try {
-        const url = state.studentModalMode === "add"
-            ? "/students"
-            : `/students/${state.selectedStudent.id}`;
+        let url = "/students";
+        let method = "POST";
 
-        const method = state.studentModalMode === "add" ? "POST" : "PUT";
+        if (state.studentModalMode === "edit") {
+            const currentId = state.selectedStudent?.id;
+            if (!currentId) {
+                throw new Error("수정할 학생 정보가 유효하지 않습니다. 다시 선택해주세요.");
+            }
+            url = `/students/${currentId}`;
+            method = "PUT";
+        }
 
         await requestApi(url, {
             method,
@@ -367,7 +384,14 @@ el.studentForm.onsubmit = async (e) => {
 
         alert("저장되었습니다.");
         el.studentModal.classList.remove("show");
-        loadStudents();
+        
+        // 목록 갱신
+        await loadStudents();
+        
+        // 현재 선택된 학생을 수정했다면 정보창만 갱신 (선택 해제 안 함)
+        if (state.selectedStudent) {
+            renderSelectedInfo();
+        }
 
     } catch (err) {
         alert(err.message);
@@ -379,8 +403,13 @@ el.studentForm.onsubmit = async (e) => {
 el.scoreForm.onsubmit = async (e) => {
     e.preventDefault();
 
+    const currentStudentId = state.selectedStudent?.id;
+    if (!currentStudentId) {
+        return alert("선택된 학생 정보가 없습니다.");
+    }
+
     const data = {
-        student_id: state.selectedStudent.id,
+        student_id: currentStudentId,
         subject_id: el.subjectSelect.value,
         score: document.getElementById("scoreInput").value
     };
@@ -453,6 +482,9 @@ function resetScoreView() {
     el.scoreEmptyState.classList.remove("hidden");
     el.scoreTableBox.classList.add("hidden");
     el.scoreSummaryBox.classList.add("hidden");
+    
+    // 목록 갱신 (선택 하이라이트 제거)
+    loadStudents();
 }
 
 
@@ -484,7 +516,7 @@ document.getElementById("resetScoreBtn").onclick = resetScoreView;
 
 
 // 모달 닫기
-document.querySelectorAll(".close-btn, .btn.secondary").forEach(btn => {
+document.querySelectorAll(".close-btn, #cancelStudentModalBtn, #cancelScoreModalBtn, #cancelSubjectModalBtn").forEach(btn => {
     btn.onclick = () => {
         el.studentModal.classList.remove("show");
         el.scoreModal.classList.remove("show");
