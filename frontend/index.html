@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>학생 정보 및 성적 관리 시스템</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header class="app-header">
+        <img src="images/school-logo.png" alt="학교 로고" class="app-logo">
+        <div class="app-title">
+            <h1>학생 정보 및 성적 관리 시스템</h1>
+            <p>학생 관리, 성적 등록, 성적 조회를 관리합니다.</p>
+        </div>
+        <div class="student-count-card">
+            <div class="student-count-icon">👥</div>
+            <div>
+                <span>전체 학생 수</span>
+                <strong><b id="studentCount">0</b>명</strong>
+            </div>
+        </div>
+
+    </header>
+
+    <main class="container">
+        <!-- 학생 관리 카드 -->
+        <section class="card student-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>학생 관리</h2>
+                    <p>학생 정보를 등록, 수정, 삭제할 수 있습니다.</p>
+                </div>
+
+                <div class="top-button-group">
+                    <div class="button-cluster">
+                        <button type="button" id="addStudentBtn" class="btn primary">+ 학생 등록</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 검색 영역 -->
+            <div id="studentListView">
+
+                <div class="search-box">
+                    <input type="text" id="searchName" placeholder="이름, 학번 검색">
+
+                    <select id="searchDepartment">
+                        <option value="">전체 학과</option>
+                        <option value="스마트금융과">스마트금융과</option>
+                        <option value="경영학과">경영학과</option>
+                        <option value="요리과">요리과</option>
+                        <option value="디자인과">디자인과</option>
+                    </select>
+
+                    <button type="button" id="searchBtn" class="btn primary">검색</button>
+                    <button type="button" id="resetSearchBtn" class="btn icon-btn" title="전체 조회">↻</button>
+                </div>
+
+                <!-- 학생 목록 -->
+                <div class="table-box">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>학번</th>
+                                <th>이름</th>
+                                <th>학과</th>
+                                <th>작업</th>
+                            </tr>
+                        </thead>
+                        <tbody id="studentTableBody">
+                            <!-- JS 출력 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- 성적 조회 카드 -->
+        <section class="card score-card">
+
+            <div class="card-header">
+                <div>
+                    <h2>성적 조회</h2>
+                    <p>학생을 선택하면 성적이 자동 조회됩니다.</p>
+                </div>
+
+                <div class="score-header-actions">
+                    <button type="button" id="addScoreBtn" class="btn primary">+ 성적 등록</button>
+                    <button type="button" id="resetScoreBtn" class="btn secondary">↻</button>
+                </div>
+            </div>
+
+            <div id="scoreStudentPanel" class="score-search hidden">
+                <span>학생 선택</span>
+                <div id="selectedStudentBox">
+                </div>
+            </div>
+
+            <div id="scoreEmptyState" class="score-empty-state">
+                <img src="images/empty-score.png" alt="성적 조회 안내">
+                <strong>학생을 선택해주세요</strong>
+                <p>학생을 선택하면 과목별 성적이 표시됩니다.</p>
+            </div>
+
+            <div id="scoreTableBox" class="table-box hidden">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>과목명</th>
+                            <th>점수</th>
+                            <th>등급</th>
+                            <th>작업</th>
+                        </tr>
+                    </thead>
+                    <tbody id="scoreTableBody">
+                        <tr>
+                            <td colspan="4" class="empty-message">학생을 선택하면 성적이 조회됩니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div id="scoreSummaryBox" class="score-summary-box hidden"></div>
+
+        </section>
+
+    </main>
+
+    <!-- 학생 추가/수정 모달 -->
+    <div id="studentModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="studentModalTitle">학생 추가</h2>
+                <button type="button" id="closeStudentModalBtn" class="close-btn">×</button>
+            </div>
+
+            <form id="studentForm">
+                <div class="form-row">
+                    <label for="studentNo">학번</label>
+                    <input type="text" id="studentNo" placeholder="예: 2026001" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="studentName">이름</label>
+                    <input type="text" id="studentName" placeholder="예: 김수현" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="studentDepartment">학과</label>
+                    <select id="studentDepartment" required>
+                        <option value="">학과 선택</option>
+                        <option value="스마트금융과">스마트금융과</option>
+                        <option value="경영학과">경영학과</option>
+                        <option value="요리과">요리과</option>
+                        <option value="디자인과">디자인과</option>
+                    </select>
+                </div>
+
+                <div class="modal-button-group">
+                    <button type="submit" id="saveStudentBtn" class="btn primary">등록</button>
+                    <button type="button" id="cancelStudentModalBtn" class="btn secondary">닫기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 성적 등록 모달 -->
+    <div id="scoreModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="scoreModalTitle">성적 등록</h2>
+                <button type="button" id="closeScoreModalBtn" class="close-btn">×</button>
+            </div>
+
+            <form id="scoreForm">
+                <div class="form-row">
+                    <label>선택한 학생</label>
+                    <input type="text" id="scoreStudentName" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label>학과</label>
+                    <input type="text" id="scoreStudentDepartment" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label for="subjectSelect">과목</label>
+                    <select id="subjectSelect" required>
+                        <option value="">과목 선택</option>
+                    </select>
+                    <button type="button" id="openSubjectModalBtn" class="btn secondary subject-add-btn">과목 추가</button>
+                </div>
+
+                <div class="form-row">
+                    <label for="scoreInput">점수</label>
+                    <input type="number" id="scoreInput" min="0" max="100" placeholder="0~100" required>
+                </div>
+
+                <div class="modal-button-group">
+                    <button type="submit" id="saveScoreBtn" class="btn primary">등록</button>
+                    <button type="button" id="cancelScoreModalBtn" class="btn secondary">닫기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 과목 추가 모달 -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>과목 추가</h2>
+                <button type="button" id="closeSubjectModalBtn" class="close-btn">×</button>
+            </div>
+
+            <form id="subjectForm">
+                <div class="form-row">
+                    <label>학과</label>
+                    <input type="text" id="subjectDepartment" readonly>
+                </div>
+
+                <div class="form-row">
+                    <label for="newSubjectName">과목명</label>
+                    <input type="text" id="newSubjectName" placeholder="예: 자료구조" required>
+                </div>
+
+                <div class="modal-button-group">
+                    <button type="submit" id="addSubjectBtn" class="btn primary">추가</button>
+                    <button type="button" id="cancelSubjectModalBtn" class="btn secondary">닫기</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
