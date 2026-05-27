@@ -25,4 +25,18 @@ router.post("/", studentController.createStudent);
  */
 router.get("/", studentController.getStudents);
 
+/**
+ * 학생 수정 API
+ *
+ * PUT /api/students/:studentId
+ */
+router.put("/:studentId", studentController.updateStudent);
+
+/**
+ * 학생 삭제 API
+ *
+ * DELETE /api/students/:studentId
+ */
+router.delete("/:studentId", studentController.deleteStudent);
+
 module.exports = router;
