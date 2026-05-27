@@ -15,7 +15,11 @@
 
 ### 메인 화면
 
-![메인 화면](frontend/images/screenshot-overview.png)
+![메인 화면](frontend/images/screenshot-main.png)
+
+### 성적 조회
+
+![성적 조회 화면](frontend/images/screenshot-score-view.png)
 
 ### 학생 수정
 
@@ -32,6 +36,10 @@
 ### 학과 검색
 
 ![학과 검색 화면](frontend/images/screenshot-filter.png)
+
+### 프로젝트 구조
+
+![프로젝트 구조](frontend/images/screenshot-project-structure.png)
 
 ## 기술 스택
 
