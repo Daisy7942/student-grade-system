@@ -131,18 +131,11 @@ async function loadStudents() {
         const res = await requestApi(url);
 
         renderStudentTable(res.data);
-        await loadStudentCount();
+        el.studentCount.textContent = res.totalCount ?? res.data.length;
 
     } catch (e) {
         alert("학생 목록을 불러오지 못했습니다.");
     }
-}
-
-
-// 전체 학생 수 조회
-async function loadStudentCount() {
-    const res = await requestApi("/students");
-    el.studentCount.textContent = res.data.length;
 }
 
 

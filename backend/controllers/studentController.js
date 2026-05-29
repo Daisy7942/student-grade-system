@@ -62,6 +62,10 @@ async function getStudents(req, res) {
     try {
         const { keyword, department } = req.query;
 
+        const [[countRow]] = await pool.execute(
+            "SELECT COUNT(*) AS totalCount FROM students"
+        );
+
         // 기본 조회 SQL
         let sql = "SELECT id, student_no, name, department FROM students WHERE 1=1";
         const params = [];
@@ -85,7 +89,8 @@ async function getStudents(req, res) {
 
         res.json({
             success: true,
-            data: rows
+            data: rows,
+            totalCount: countRow.totalCount
         });
 
     } catch (error) {
