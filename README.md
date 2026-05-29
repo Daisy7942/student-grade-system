@@ -25,6 +25,18 @@ Browser
 - 학과별 기본 과목 조회 및 과목 추가
 - Docker Compose 기반 통합 실행 환경
 
+## CRUD 기능 범위
+
+이 프로젝트는 학생 정보와 성적 정보를 중심으로 CRUD 기능을 구현합니다.
+
+| 구분 | Create | Read | Update | Delete |
+| --- | --- | --- | --- | --- |
+| 학생 관리 | 학생 등록 | 학생 목록 조회, 검색 | 학생 정보 수정 | 학생 삭제 |
+| 성적 관리 | 성적 등록 | 학생별 성적 조회, 전체 성적 조회 | 같은 학생/과목 성적 재등록 시 점수 수정 | 성적 삭제 |
+| 과목 관리 | 과목 추가 | 전체 과목 조회, 학과별 과목 조회 | - | - |
+
+학생 데이터는 `students` 테이블에 저장되고, 성적 데이터는 `scores` 테이블에 저장됩니다. 성적은 같은 학생과 같은 과목 조합을 중복 저장하지 않고 기존 점수를 수정하는 방식으로 관리합니다.
+
 ## 기술 스택
 
 ### Frontend
@@ -130,6 +142,55 @@ docker compose up --build -d
 - `scores`: 학생별 과목 성적
 
 `scores` 테이블은 학생과 과목 조합을 유일하게 관리합니다. 같은 학생의 같은 과목 성적을 다시 저장하면 새로 추가하지 않고 기존 점수를 수정합니다.
+
+## 데이터베이스 조회 방법
+
+Docker Compose 실행 후 MySQL 컨테이너에 직접 접속할 수 있습니다.
+
+```bash
+docker compose exec db mysql -ustudent_user -p student_grade_db
+```
+
+접속 후 테이블 목록을 확인합니다.
+
+```sql
+SHOW TABLES;
+```
+
+학생 데이터를 조회합니다.
+
+```sql
+SELECT * FROM students;
+```
+
+과목 데이터를 조회합니다.
+
+```sql
+SELECT * FROM subjects;
+```
+
+학생별 성적을 학생 정보와 과목 정보까지 함께 조회합니다.
+
+```sql
+SELECT
+    st.student_no,
+    st.name,
+    st.department,
+    sb.subject_name,
+    sc.score
+FROM scores sc
+JOIN students st ON sc.student_id = st.id
+JOIN subjects sb ON sc.subject_id = sb.id
+ORDER BY st.id, sb.id;
+```
+
+호스트 또는 WSL에 MySQL 클라이언트가 설치되어 있다면 아래 방식으로도 접속할 수 있습니다.
+
+```bash
+mysql -h 127.0.0.1 -P 3307 -ustudent_user -p student_grade_db
+```
+
+비밀번호는 프롬프트가 표시되면 입력합니다.
 
 ## 화면 예시
 
