@@ -5,6 +5,10 @@
 
 const pool = require("../db/connection");
 
+function isDuplicateEntryError(error) {
+    return error && error.code === "ER_DUP_ENTRY";
+}
+
 
 // 학생 등록
 async function createStudent(req, res) {
@@ -37,6 +41,13 @@ async function createStudent(req, res) {
 
     } catch (error) {
         console.error("학생 등록 오류:", error);
+
+        if (isDuplicateEntryError(error)) {
+            return res.status(409).json({
+                success: false,
+                message: "이미 등록된 학번입니다."
+            });
+        }
 
         res.status(500).json({
             success: false,
@@ -94,6 +105,13 @@ async function updateStudent(req, res) {
         const { studentId } = req.params;
         const { student_no, name, department } = req.body;
 
+        if (!student_no || !name || !department) {
+            return res.status(400).json({
+                success: false,
+                message: "모든 항목을 입력해주세요."
+            });
+        }
+
         // studentId에 해당하는 학생 정보 수정
         const sql = "UPDATE students SET student_no = ?, name = ?, department = ? WHERE id = ?";
         const [result] = await pool.execute(sql, [student_no, name, department, studentId]);
@@ -114,6 +132,13 @@ async function updateStudent(req, res) {
     } catch (error) {
         console.error("학생 수정 오류:", error);
 
+        if (isDuplicateEntryError(error)) {
+            return res.status(409).json({
+                success: false,
+                message: "이미 등록된 학번입니다."
+            });
+        }
+
         res.status(500).json({
             success: false,
             message: "서버 오류가 발생했습니다."
@@ -126,6 +151,18 @@ async function updateStudent(req, res) {
 async function deleteStudent(req, res) {
     try {
         const { studentId } = req.params;
+
+        const [scores] = await pool.execute(
+            "SELECT id FROM scores WHERE student_id = ? LIMIT 1",
+            [studentId]
+        );
+
+        if (scores.length > 0) {
+            return res.status(409).json({
+                success: false,
+                message: "연결된 성적이 있어 삭제할 수 없습니다."
+            });
+        }
 
         // studentId에 해당하는 학생 데이터 삭제
         const [result] = await pool.execute(

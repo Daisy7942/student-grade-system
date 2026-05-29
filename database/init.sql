@@ -60,7 +60,7 @@ CREATE TABLE scores (
     CONSTRAINT fk_scores_student
         FOREIGN KEY (student_id)
         REFERENCES students(id)
-        ON DELETE CASCADE,
+        ON DELETE RESTRICT,
 
     CONSTRAINT fk_scores_subject
         FOREIGN KEY (subject_id)

@@ -388,8 +388,12 @@ el.studentForm.onsubmit = async (e) => {
         // 목록 갱신
         await loadStudents();
         
-        // 현재 선택된 학생을 수정했다면 정보창만 갱신 (선택 해제 안 함)
+        // 현재 선택된 학생을 수정했다면 선택 정보도 새 입력값으로 갱신
         if (state.selectedStudent) {
+            state.selectedStudent = {
+                ...state.selectedStudent,
+                ...data
+            };
             renderSelectedInfo();
         }
 
