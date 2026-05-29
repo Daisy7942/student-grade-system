@@ -154,47 +154,55 @@ async function updateStudent(req, res) {
 
 // 학생 삭제
 async function deleteStudent(req, res) {
+    const connection = await pool.getConnection();
+
     try {
         const { studentId } = req.params;
 
-        const [scores] = await pool.execute(
-            "SELECT id FROM scores WHERE student_id = ? LIMIT 1",
+        await connection.beginTransaction();
+
+        const [students] = await connection.execute(
+            "SELECT id FROM students WHERE id = ?",
             [studentId]
         );
 
-        if (scores.length > 0) {
-            return res.status(409).json({
-                success: false,
-                message: "연결된 성적이 있어 삭제할 수 없습니다."
-            });
-        }
+        if (students.length === 0) {
+            await connection.rollback();
 
-        // studentId에 해당하는 학생 데이터 삭제
-        const [result] = await pool.execute(
-            "DELETE FROM students WHERE id = ?",
-            [studentId]
-        );
-
-        // 삭제된 행이 없으면 해당 학생이 존재하지 않는 것
-        if (result.affectedRows === 0) {
             return res.status(404).json({
                 success: false,
                 message: "학생을 찾을 수 없습니다."
             });
         }
 
+        // 연결된 성적을 먼저 삭제한 뒤 학생 데이터를 삭제한다.
+        await connection.execute(
+            "DELETE FROM scores WHERE student_id = ?",
+            [studentId]
+        );
+
+        await connection.execute(
+            "DELETE FROM students WHERE id = ?",
+            [studentId]
+        );
+
+        await connection.commit();
+
         res.json({
             success: true,
-            message: "삭제되었습니다."
+            message: "학생과 연결된 성적이 함께 삭제되었습니다."
         });
 
     } catch (error) {
+        await connection.rollback();
         console.error("학생 삭제 오류:", error);
 
         res.status(500).json({
             success: false,
             message: "서버 오류가 발생했습니다."
         });
+    } finally {
+        connection.release();
     }
 }
 

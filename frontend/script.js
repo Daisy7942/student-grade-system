@@ -436,7 +436,7 @@ el.scoreForm.onsubmit = async (e) => {
 
 // 학생 삭제
 async function deleteStudent(s) {
-    if (!confirm(`${s.name} 학생을 삭제하시겠습니까?`)) {
+    if (!confirm(`${s.name} 학생과 연결된 성적이 함께 삭제됩니다. 그래도 삭제하시겠습니까?`)) {
         return;
     }
 
@@ -454,7 +454,7 @@ async function deleteStudent(s) {
         loadStudents();
 
     } catch (e) {
-        alert("연결된 성적이 있어 삭제할 수 없습니다.");
+        alert(e.message || "삭제 실패");
     }
 }
 
