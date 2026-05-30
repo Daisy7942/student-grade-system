@@ -14,13 +14,6 @@ Browser
  -> Backend: Node.js + Express
  -> Database: MySQL 8.0
 ```
-## 환경변수 설정
-
-`.env.example` 파일을 복사하여 `.env` 파일을 만든 뒤,
-본인 실행 환경에 맞게 DB 비밀번호를 입력합니다.
-
-```cmd
-copy .env.example .env
 
 
 ## 주요 기능
@@ -119,6 +112,14 @@ docker compose up --build -d
 - Frontend: http://localhost:8080
 - Backend API: http://localhost:5000/api
 - Database: localhost:3307
+
+## 환경변수 설정
+
+`.env.example` 파일을 복사하여 `.env` 파일을 만든 뒤,
+본인 실행 환경에 맞게 DB 비밀번호를 입력합니다.
+
+```cmd
+copy .env.example .env
 
 ## API 구성
 
