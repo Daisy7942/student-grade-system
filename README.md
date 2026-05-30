@@ -119,7 +119,7 @@ docker compose up --build -d
 본인 실행 환경에 맞게 DB 비밀번호를 입력합니다.
 
 ```cmd
-copy .env.example .env
+copy .env.example .env```
 
 ## API 구성
 
